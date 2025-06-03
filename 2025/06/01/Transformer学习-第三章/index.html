@@ -2,7 +2,7 @@
 <html>
 	<head>
 		
-<title>发布第一篇个人博客-小豆出没！</title>
+<title>Transformer学习_第三章-小豆出没！</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -12,7 +12,7 @@
 
 
 
-<meta name="keywords" content="学习,">
+<meta name="keywords" content="学习,Transformer,">
 <meta name="description" content="">
 
 
@@ -305,10 +305,12 @@
             
             <li><a href="/tags/学习">学习</a></li>
             
+            <li><a href="/tags/Transformer">Transformer</a></li>
+            
             
         </ul>
         
-        <h1>发布第一篇个人博客</h1>
+        <h1>Transformer学习_第三章</h1>
         <div class="post-header-info">
             <div class="post-header-info-author">
                 
@@ -325,7 +327,7 @@
                          <a href="../../categories/学习记录/" target="_blank" >学习记录</a>
                     
                 </div>
-                <p>2025-05-31 16:36:33</p>
+                <p>2025-06-01 16:42:32</p>
             </div>
         </div>
     </div>
@@ -335,7 +337,17 @@
   <div id="article" class="post-content-info">
     
 
-    
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>今天在学习《Transformer快速入门》的第三章——注意力机制。内容包括了单头和多头注意力机制的讲解与手动实现、Transformer Encoder与Decoder的详细构造。</p>
+<p>感觉python的库真的好多好丰富，各种深度学习要用的函数名和具体用法根本记不清（也可能是我不熟练导致的？），和以前只需要记住某些语句的C语言编程课差距好大，不依赖ai真的就不太会使用。</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="一、注意力机制"><a href="#一、注意力机制" class="headerlink" title="一、注意力机制"></a>一、注意力机制</h2><p>这个注意力机制是怎么个事呢？就是我们一次性的抓取全文的信息，每个位置都能感知到全文其他任意地方的信息。和CNN这种侧重捕获局部信息的，以及RNN这种需要按照顺序进行递归建模的方法都有所区别。</p>
+<h3 id="1-Scaled-Dot-product-Attention"><a href="#1-Scaled-Dot-product-Attention" class="headerlink" title="1. Scaled Dot-product Attention"></a>1. Scaled Dot-product Attention</h3><h4 id="1）理论部分"><a href="#1）理论部分" class="headerlink" title="1）理论部分"></a>1）理论部分</h4><p>这个是注意力机制最常见的一种实现方法，也就是使用点积来衡量query和key之间的相似度（所以使用该方法时就要求query和key的最后一个维度即嵌入维度是相同的，不然没法点乘）。并且为了防止点积得出的数字范围不可控，使用query和key的嵌入维度对点积结果进行缩放（说白了也就是直接拿点积结果除以这个维度值的平方根），之后再用softmax进行标准化。</p>
+<p>假设有$N$组问答对，假设每条query语句的长度都是<em>n</em>。则总query的维度是$N \times n \times d_q$，其中$d_q$就是query中每一个词语的嵌入向量维度，在scaled dot-product attention中，$d_q&#x3D;d_k$.而此时假设总key的维度是$N\times m \times d_k$，我们令key的最后两维转置即可让它与query矩阵相乘，可以得到一个维度为$N\times n\times m$的矩阵，这个称为注意力分数矩阵。那么特定的一组问答对的注意力矩阵维度就是$n \times m$，该矩阵中的第$i$行第$j$列表示的是第$i$个query向量和第$j$个key向量之间的相似度。</p>
+<p>上面矩阵相乘实际上就是$dot$部分，接着要进行$scale$部分，也就是根据$d_k$大小对它进行缩放，也就是让上面的矩阵里面的数全部除以$\sqrt {d_k}$.之后再对每一行使用softmax标准化，这样最终得到的矩阵称为注意力权重矩阵。将权重$w_{ij}$与对应的value向量相乘以后获得第$i$个query向量更新后的语义表示$x_i’&#x3D;\sum_j w_{ij}v_j$，其中value矩阵的维度为$N\times  m\times d_v$.这里的$v_j$也就是一个维度为$d_v$的向量。</p>
+<p>可以这么理解：query就是“问题”，key就是所有“已有信息的标签”，value就是”真正要提取的信息内容”。所以我们不是直接选择key，而是用key找出哪些value更重要。理论上，key和value是成对出现的，每一个key对应一个value。所以可以看到在上面的矩阵维度中，value和key的第二维都是$m$，且最终得到的注意力权重矩阵也是用于对value的加权组合。</p>
+<p>感觉我解释得也不是很好，就是只有我自己能看懂的程度。</p>
+<h4 id="2）代码实现"><a href="#2）代码实现" class="headerlink" title="2）代码实现"></a>2）代码实现</h4><p>这个教程里面给了手动实现Self Dot-production Attention的代码，我跟着一边敲一边解释解释，以防下次我又看不懂。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><span class="hljs-keyword">from</span> transformers <span class="hljs-keyword">import</span> AutoConfig<br><span class="hljs-keyword">from</span> transformers <span class="hljs-keyword">import</span> AutoTokenizer<br><br>model_ckpt = <span class="hljs-string">&quot;bert-base-uncased&quot;</span><br>tokenizer = AutoTokenizer.from_pretrained(model_ckpt)<br><br>text = <span class="hljs-string">&quot;time flies like an arrow&quot;</span><br>inputs = tokenizer(text, return_tensors=<span class="hljs-string">&quot;pt&quot;</span>, add_special_tokens=<span class="hljs-literal">False</span>)<br><span class="hljs-built_in">print</span>(inputs.input_ids)<br><br>config = AutoConfig.from_pretrained(model_ckpt)<br>token_emb = nn.Embedding(config.vocab_size, config.hidden_size)<br><span class="hljs-built_in">print</span>(token_emb)<br><br>inputs_embeds = token_emb(inputs.input_ids)<br><span class="hljs-built_in">print</span>(inputs_embeds.size())<br></code></pre></td></tr></table></figure>
+
   </div>
   <div id=""></div>
 </div>
@@ -395,19 +407,12 @@ Fancybox.bind('[data-fancybox="fancybox-gallery-img"]', {
 
     <div class="post-paging">
     
-    <a href="/2025/06/01/Transformer%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%89%E7%AB%A0/">
-        <div class="post-paging-last">
-            <span>上一篇</span>
-            <p>Transformer学习_第三章</p>
-        </div>
-    </a>
-    
 
     
-    <a href="/2025/05/31/hello-world/">
+    <a href="/2025/05/31/%E5%8F%91%E5%B8%83%E7%AC%AC%E4%B8%80%E7%AF%87%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">
         <div class="post-paging-next">
             <span>下一篇</span>
-            <p>Hello World</p>
+            <p>发布第一篇个人博客</p>
         </div>
     </a>
     

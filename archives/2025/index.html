@@ -34,6 +34,25 @@
  
 <script>hljs.highlightAll();</script>
 
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      packages: ['base', 'ams'],  // ✅ 加上 'ams' 扩展
+      macros: {
+        // 可选：你还可以自定义一些简化命令
+        boldsymbol: ["{\\boldsymbol{#1}}", 1],
+        bm: ["{\\mathbf{#1}}", 1]     
+      }
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
 	<meta name="generator" content="Hexo 7.3.0"></head>
 
 	<body>
@@ -290,7 +309,7 @@
             <img src="/image/page_heads/archive_head.png" alt="Quiet">
         </span>
 
-        <h2>居然用了 1 年一共才写了 2 篇文章!</h2>
+        <h2>居然用了 1 年一共才写了 3 篇文章!</h2>
     </div>
 </div>
     
@@ -301,6 +320,11 @@
         <p>
             2025
         </p>
+        
+        <a href="/2025/06/01/Transformer学习-第三章/">
+            <span>Transformer学习_第三章</span>
+            <time>06-01</time>
+        </a>
         
         <a href="/2025/05/31/发布第一篇个人博客/">
             <span>发布第一篇个人博客</span>

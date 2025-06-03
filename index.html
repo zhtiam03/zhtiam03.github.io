@@ -34,6 +34,25 @@
  
 <script>hljs.highlightAll();</script>
 
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      packages: ['base', 'ams'],  // ✅ 加上 'ams' 扩展
+      macros: {
+        // 可选：你还可以自定义一些简化命令
+        boldsymbol: ["{\\boldsymbol{#1}}", 1],
+        bm: ["{\\mathbf{#1}}", 1]     
+      }
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
 	<meta name="generator" content="Hexo 7.3.0"></head>
 
 	<body>
@@ -288,6 +307,30 @@
 	<div class="main">
 		
 			<div class="post-card" id="content">
+				
+					<div class="post-card-display">
+						<a href="/2025/06/01/Transformer%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%89%E7%AB%A0/">
+							<h2 class="post-card-title">
+								Transformer学习_第三章
+							</h2>
+							
+								<img src="/image/covers/cover3.png" alt="Quiet">
+							
+						</a>
+						<div class="post-card-meat">
+							<div class="meat-info">
+								<div class="info-auth">
+										<a href="categories/学习记录/">
+											学习记录
+										</a>
+								</div>
+								<div class="info-data">
+									2025-06-01
+								</div>
+							</div>
+							<div class="meat-type"></div>
+						</div>
+					</div>
 				
 					<div class="post-card-display">
 						<a href="/2025/05/31/%E5%8F%91%E5%B8%83%E7%AC%AC%E4%B8%80%E7%AF%87%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">

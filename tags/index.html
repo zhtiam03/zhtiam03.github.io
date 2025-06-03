@@ -34,6 +34,25 @@
  
 <script>hljs.highlightAll();</script>
 
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      packages: ['base', 'ams'],  // ✅ 加上 'ams' 扩展
+      macros: {
+        // 可选：你还可以自定义一些简化命令
+        boldsymbol: ["{\\boldsymbol{#1}}", 1],
+        bm: ["{\\mathbf{#1}}", 1]     
+      }
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
 	<meta name="generator" content="Hexo 7.3.0"></head>
 
 	<body>
@@ -289,10 +308,14 @@
 </div>
     <div class="tags-content" id="content">
         <div class="tags-content-data">
-            <h2>1 Tags In Total</h2>
+            <h2>2 Tags In Total</h2>
             
                 <a href="/tags/%E5%AD%A6%E4%B9%A0/" class="tag-学习" value="学习">
-                    <span># 学习 <i>1</i> </span>
+                    <span># 学习 <i>2</i> </span>
+                </a>
+            
+                <a href="/tags/Transformer/" class="tag-Transformer" value="Transformer">
+                    <span># Transformer <i>1</i> </span>
                 </a>
             
         </div>

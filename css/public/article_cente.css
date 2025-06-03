@@ -95,9 +95,13 @@
   padding: 40px 20px 20px 20px;
   margin: 20px 0;
   white-space: pre;
+  /*pp改了！！！！原来是pre!!!*/
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
+  /*下面是新加的*/
+  overflow-x: auto;
+  display: block;
 }
 #article p {
   display: block;

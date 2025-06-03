@@ -97,9 +97,13 @@
   padding: 40px 20px 20px 20px;
   margin: 20px 0;
   white-space: pre;
+  /*pp改了！！！！原来是pre!!!*/
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
+  /*下面是新加的*/
+  overflow-x: auto;
+  display: block;
 }
 #article p {
   display: block;
@@ -1420,6 +1424,18 @@ hue-6-2: #e6c07b
     margin: 40px 20px;
   }
 }
+/* 新加的部分，强制允许代码块换行，修复 white-space: nowrap 问题 */
+/*.highlight pre,
+.highlight .line,
+pre code {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}*/
+/* 修复 highlight.js 渲染后代码块无法换行的问题 */
+/*.highlight, pre, code {
+  white-space: pre-wrap !important;
+  /*word-break: break-word !important;
+}*/
 .tag-content {
   display: flex;
   max-width: 1160px;
